@@ -1,13 +1,9 @@
----
-title: "Reproducible Research: Peer Assessment 1"
-output: 
-  html_document:
-    keep_md: true
----
+# Reproducible Research: Peer Assessment 1
 
 
 ## Loading and preprocessing the data
-```{r}
+
+```r
 activity <- read.csv("activity.csv")
 # convert dates
 activity$date <- as.Date(activity$date, "%Y-%m-%d")
@@ -16,7 +12,8 @@ activity$date <- as.Date(activity$date, "%Y-%m-%d")
 
 
 ## What is mean total number of steps taken per day?
-```{r, message=F, warning=F}
+
+```r
 # group data by date and sum the steps for each date
 dailySteps <- with(activity, aggregate(steps, list(date), sum))
 colnames(dailySteps) <- c("date", "steps")
@@ -28,17 +25,32 @@ ggplot(dailySteps, aes(steps)) +
     ggtitle("Total Steps per Day") +
     xlab("Steps")
 ```
-```{r}
+
+![](PA1_template_files/figure-html/unnamed-chunk-2-1.png)<!-- -->
+
+```r
 # mean of daily steps with NAs removed
 mean(dailySteps$steps, na.rm = TRUE)
+```
+
+```
+## [1] 10766.19
+```
+
+```r
 # median of daily steps with NAs removed
 median(dailySteps$steps, na.rm = TRUE)
+```
+
+```
+## [1] 10765
 ```
 
 
 
 ## What is the average daily activity pattern?
-```{r}
+
+```r
 # group data by interval and average the steps for each interval
 periodicSteps <- with(activity, aggregate(steps, list(interval), mean, na.rm = TRUE))
 colnames(periodicSteps) <- c("interval", "steps")
@@ -49,24 +61,44 @@ ggplot(periodicSteps, aes(interval, steps)) +
     xlab("Interval") +
     ylab("Average Steps")
 ```
-```{r}
+
+![](PA1_template_files/figure-html/unnamed-chunk-4-1.png)<!-- -->
+
+```r
 # row with max steps
 maxRow <- which.max(periodicSteps$steps)
 # interval with max steps
 periodicSteps[maxRow, "interval"]
+```
+
+```
+## [1] 835
+```
+
+```r
 # max steps
 periodicSteps[maxRow, "steps"]
+```
+
+```
+## [1] 206.1698
 ```
 
 
 
 ## Imputing missing values
-```{r}
+
+```r
 # rows with NA values
 naRows <- which(is.na(activity$steps))
 length(naRows)
 ```
-```{r}
+
+```
+## [1] 2304
+```
+
+```r
 # copy data 
 activity1 <- activity
 # loop through rows with NAs
@@ -81,7 +113,12 @@ for (row in naRows) {
 naRows <- which(is.na(activity1$steps))
 length(naRows)
 ```
-```{r, message=F}
+
+```
+## [1] 0
+```
+
+```r
 # group data by date and sum the steps for each date
 dailySteps1 <- with(activity1, aggregate(steps, list(date), sum))
 colnames(dailySteps1) <- c("date", "steps")
@@ -92,17 +129,32 @@ ggplot(dailySteps1, aes(steps)) +
     ggtitle("Total Steps per Day") +
     xlab("Steps")
 ```
-```{r}
+
+![](PA1_template_files/figure-html/unnamed-chunk-8-1.png)<!-- -->
+
+```r
 # mean of daily steps
 mean(dailySteps1$steps)
+```
+
+```
+## [1] 10766.19
+```
+
+```r
 # median of daily steps
 median(dailySteps1$steps)
+```
+
+```
+## [1] 10766.19
 ```
 
 
 
 ## Are there differences in activity patterns between weekdays and weekends?
-```{r}
+
+```r
 # apply anonymous function that determines which day it is to each date
 # place results into a new column
 activity$day <- sapply(activity$date, function(date) {
@@ -122,3 +174,5 @@ ggplot(periodicSteps1, aes(interval, steps)) +
     xlab("Interval") +
     ylab("Average Steps")
 ```
+
+![](PA1_template_files/figure-html/unnamed-chunk-10-1.png)<!-- -->
