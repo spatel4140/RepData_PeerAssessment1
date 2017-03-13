@@ -67,15 +67,6 @@ ggplot(periodicSteps, aes(interval, steps)) +
 ```r
 # row with max steps
 maxRow <- which.max(periodicSteps$steps)
-# interval with max steps
-periodicSteps[maxRow, "interval"]
-```
-
-```
-## [1] 835
-```
-
-```r
 # max steps
 periodicSteps[maxRow, "steps"]
 ```
@@ -97,6 +88,10 @@ length(naRows)
 ```
 ## [1] 2304
 ```
+### The following steps were taken to compute the missing values:
+* loop through rows with NAs
+* determine which intervals have NAs
+* replace steps with average steps for that interval
 
 ```r
 # copy data 
